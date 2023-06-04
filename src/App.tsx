@@ -1,32 +1,21 @@
 
-import { useState } from "react";
+import React, { ChangeEvent, useState } from "react";
 import List from "./comp/List";
 
 function App() {
-  const [list, setList] = useState([]);
-  const [edval,setEdVal]=useState('');
+  const [list, setList] = useState<string[]>([]);
+  const [edval,setEdVal]=useState<string | number>('');
   const [txt,setTxt]=useState('');
 let edit='';
-  function save(event) {
-    if (event.key === "Enter" && event.target.value !== "") {
-      setList([event.target.value, ...list]);
-      event.target.value = "";
-    }
+  function save(event:React.KeyboardEvent<HTMLInputElement>) {
+    const value = event.currentTarget.value;
+  if (event.key === "Enter" && value !== "") {
+    setList([value, ...list]);
+    event.currentTarget.value = "";
+  }
   }
 
-  function deletVal(key) {
-    let newArr = [...list];
-    newArr.splice(key, 1)
-    setList([...newArr]);
-  }
 
-  function editVal(key){
-    console.log(list[key])
-
-    setEdVal(list[key])
-    let newArr=[...list]
-    
-  }
 
   return (
     <div className="w-full h-[100vh]">
@@ -39,9 +28,7 @@ let edit='';
           
       
         ></input>
-        {list.map((tar, i) => {
-          return <List val={tar} index={i} deletVal={deletVal} editVal={editVal}></List>;
-        })}
+        <List list={list} setList={setList}/>
 
         <button className="bg-red-400 py-1 px-2 rounded-md absolute right-0 bottom-0 mr-1 mb-1">
           Delete Marked
