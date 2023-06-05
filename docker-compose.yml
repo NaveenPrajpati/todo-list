@@ -1,44 +1,54 @@
 services:
-  frontend:
-    build:
-      context: frontend
-      target: development
-    ports:
-      - 3000:3000
-    stdin_open: true
-    volumes:
-      - ./frontend:/usr/src/app
-      - /usr/src/app/node_modules
-    restart: always
-    networks:
-      - react-express
-    depends_on:
-      - server
-
   server:
-    restart: always
     build:
-      context: server
-      target: development
+      context: ./server
+      dockerfile: Dockerfile
+    image: myapp-server
+    container_name: myapp-node-server
+    command: /usr/src/app/node_modules/.bin/nodemon server.js
     volumes:
-      - ./server:/usr/src/app
+      - ./server/:/usr/src/app
       - /usr/src/app/node_modules
+    ports:
+      - "4000:4000"
     depends_on:
       - mongo
+    env_file: ./server/.env
+    environment:
+      - NODE_ENV=development
     networks:
-      - express-mongo
-      - react-express
-    expose: 
-      - 4000
+      - app-network
   mongo:
-    restart: always
     image: mongo
     volumes:
-      - ./data:/data/db
+      - data-volume:/data/db
+    ports:
+      - "27017:27017"
     networks:
-      - express-mongo
-    expose:
-      - 27017
+      - app-network
+  client:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    image: myapp-client
+    container_name: myapp-react-client
+    command: npm start
+    volumes:
+      - ./frontend/:/usr/src/app
+      - /usr/src/app/node_modules
+    depends_on:
+      - server
+    ports:
+      - "3000:3000"
+    networks:
+      - app-network
+
 networks:
-  react-express:
-  express-mongo:
+    app-network:
+        driver: bridge
+
+volumes:
+    data-volume:
+    node_modules:
+    web-root:
+      driver: local

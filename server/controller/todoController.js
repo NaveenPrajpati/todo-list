@@ -3,6 +3,7 @@ const Todo = require('../models/todoModel');
 exports.addTodo = async (req, res) => {
     try {
         const { text } = req.body;
+        console.log(req.body)
         const todo = new Todo({
             text: text,
         });

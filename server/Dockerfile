@@ -11,7 +11,7 @@ RUN npm i
 COPY . /usr/src/app
 
 
-ENV BASE_URL=mongodb+srv://root:nav123@naveencluster.w251o46.mongodb.net/todos
+
 
 EXPOSE 4000
 

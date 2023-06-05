@@ -31,9 +31,10 @@ function App() {
 
 
   return (
-    <div className="w-full h-[100vh]">
-        <h1 className="text-center font-bold text-2xl mt-[200px]">Todo List</h1>
+    <div className="w-full h-[100vh] bg-slate-200">
+        <h1 className="text-center font-bold text-2xl ">Todo List</h1>
       <div className="max-w-[400px] shadow-white bg-slate-900 p-5 mx-auto  h-[500px] overflow-y-auto relative shadow-inner">
+       
         <input
           type="text"
           onKeyDown={save}
