@@ -1,4 +1,4 @@
-import React, { ChangeEvent, Dispatch, SetStateAction, useState, useEffect } from "react";
+import React, { ChangeEvent, Dispatch, SetStateAction, useState, useEffect, useRef } from "react";
 import { CgCloseR } from "react-icons/cg";
 import { AiFillEdit } from "react-icons/ai";
 import { deleteTodo, getTodo, updateTodo } from "../service/todoService";
@@ -15,6 +15,7 @@ function List({ list, setList }: pros) {
   const [change, setChange] = useState<string>('')
   const [ind, setInd] = useState<string>('')
   const [edit, setEdit] = useState(false)
+  const editRef=useRef<HTMLInputElement>(null)
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     setChange(event.currentTarget.value);
@@ -62,9 +63,14 @@ function List({ list, setList }: pros) {
     setInd(key)
     setChange(text)
     setEdit(true)
+  
 
   }
-
+  useEffect(() => {
+    if (edit && editRef.current) {
+      editRef.current.focus();
+    }
+  }, [edit]);
 
 
 
@@ -72,11 +78,11 @@ function List({ list, setList }: pros) {
     <div className="">
 
       {list?.map((li, index) => (
-        <div key={index} className="w-full border-b-blace-1 mt-2 p-1 flex justify-between items-center shadow-white shadow-2xl  bg-slate-100 rounded-lg">
+        <div key={index} className="w-full border-b-blace-1 mt-2 p-1 flex justify-between items-center shadow-white shadow-2xl  bg-slate-200 rounded-lg">
           <div className="flex items-center gap-1">
             {/* <input type="checkbox" id="check" /> */}
             {!(edit && ind === li._id) && <p className="font-semibold text-slate-600">{li.text}</p>}
-            {(edit && ind === li._id) && <input type="text" name="textValue" value={change} className="px-1 w-full rounded-md outline-none font-semibold text-slate-600" onChange={handleChange} onKeyDown={handleKeyboard} />}
+            {(edit && ind === li._id) && <input type="text" ref={editRef} name="textValue" value={change} className="px-1  rounded-md outline-none font-semibold text-slate-600 w-[300px]" onChange={handleChange} onKeyDown={handleKeyboard} />}
           </div>
           <div className="flex gap-2">
             <button onClick={() => editVal(li._id, li.text)}>
